@@ -9,16 +9,57 @@
 NAME = rt
 
 # cpp файлы
-DIR_SRCS = srcs
-SRCS = 	main.cpp Parser.cpp ParserExceptions.cpp ParserTests.cpp ParserConfig.cpp Color.cpp Vector3f.cpp ParseObjects.cpp
+SRCS 		= 		main.cpp \
+					Color.cpp \
+					Vector3f.cpp \
+					Ambient.cpp \
+					Light.cpp \
+					Camera.cpp \
+					Sphere.cpp \
+					Cylinder.cpp \
+					Plane.cpp
 
-PATH_SRCS = $(addprefix $(DIR_SRCS)/, $(SRCS))
+# Parser
+SRCS_PARSER =		Parser.cpp \
+					ParserExceptions.cpp \
+					ParserTests.cpp \
+					ParserConfig.cpp \
+					ParserCreateScene.cpp \
+					ParseObjects.cpp
+DIR_PARSER 	=		Parser
+PATH_PARSER =		$(addprefix $(DIR_PARSER)/, $(SRCS_PARSER))
+SRCS 		+=		$(PATH_PARSER)
+DIRS 		+=		$(DIR_PARSER)
 
-DIRS = 
+# Scene
+SRCS_SCENE	=		SceneSetObjects.cpp \
+					SceneRendering.cpp
+DIR_SCENE	=		Scene
+PATH_SCENE	=		$(addprefix $(DIR_SCENE)/, $(SRCS_SCENE))
+SRCS		+=		$(PATH_SCENE)
+DIRS 		+=		$(DIR_SCENE)
+
+PATH_SRCS 	= 		$(addprefix $(DIR_SRCS)/, $(SRCS))
+
 
 # hpp файлы
-DIR_HEADERS = headers
-HEADERS = 	RayTracing.hpp Parser.hpp Color.hpp utils.hpp Vector3f.hpp
+DIR_HEADERS = 		headers
+HEADERS 	= 		RayTracing.hpp \
+					Parser.hpp \
+					Color.hpp \
+					utils.hpp \
+					Vector3f.hpp \
+					Scene.hpp \
+					Ambient.hpp \
+					Light.hpp \
+					Camera.hpp \
+					IFigure.hpp \
+					Sphere.hpp \
+					Cylinder.hpp \
+					Plane.hpp
+
+DIR_SRCS 	= 		srcs
+PATH_SRCS 	= 		$(addprefix $(DIR_SRCS)/, $(SRCS))
 
 PATH_HEADERS = $(addprefix $(DIR_HEADERS)/, $(HEADERS))
 
@@ -26,6 +67,7 @@ PATH_HEADERS = $(addprefix $(DIR_HEADERS)/, $(HEADERS))
 DIR_OBJS = objs
 OBJS = $(patsubst %.cpp, %.o, $(SRCS))
 PATH_OBJS = $(addprefix $(DIR_OBJS)/, $(OBJS))
+DIR_SRCS_OBJS = $(addprefix $(DIR_OBJS)/, $(DIRS))
 
 #Добавление библиотеки mlx
 MLX = libmlx.dylib
@@ -33,10 +75,10 @@ MLX_FLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
 MLX_DIR = mlx
 
 # компилятор
-CC = c++
+CC = clang++
 
 # флаги
-FLAGS =  -g -std=c++17
+FLAGS =  -g -O3 -std=c++17
 
 # команда удаления
 RM = rm -rf
@@ -56,7 +98,7 @@ $(NAME): write_logo create_dirs $(PATH_OBJS)
 	@cp $(MLX_DIR)/$(MLX) .
 	@echo "$(GREEN)\nMLX was compiled $(RESET)"
 	@echo "$(GREEN)\nObjects was created $(RESET)"
-	@$(CC) $(FLAGS) $(MLX_FLAGS) -I $(DIR_HEADERS) $(PATH_OBJS) -o $@
+	@$(CC) $(FLAGS) $(MLX_FLAGS) -I $(DIR_HEADERS) $(MLX) $(PATH_OBJS) -o $@
 	@echo "$(GREEN)Simply the best hard multi-d ray-tracing mother lover by peace dukes was compiled $(RESET)"
 
 
@@ -101,7 +143,7 @@ write_logo:
 
 # создание папок в папке objs
 create_dirs:
-	@mkdir -p $(DIR_OBJS) $(DIR_OBJS)/$(DIRS)
+	@mkdir -p $(DIR_OBJS) $(DIR_SRCS_OBJS)
 
 
 #Получение объектных файлов
@@ -109,7 +151,7 @@ create_dirs:
 #Объектные файлы зависят от си файлов
 #Ещё есть зависимость от хэдеров. Это нужно, чтобы при измении хэдера проект перекомпилировался
 $(DIR_OBJS)/%.o: $(DIR_SRCS)/%.cpp $(PATH_HEADERS) Makefile
-	@$(CC) $(FLAGS) -I $(DIR_HEADERS) -c $< -o $@
+	@$(CC) $(FLAGS) -I $(MLX_DIR) -I $(DIR_HEADERS) -c $< -o $@
 	@echo "$(GREEN).$(RESET)\c"
 
 #Абстрактная цель clean

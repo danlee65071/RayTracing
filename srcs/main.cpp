@@ -1,4 +1,5 @@
-#include "RayTracing.hpp"
+#include "Parser.hpp"
+#include "Scene.hpp"
 
 void testParser(Parser& p)
 {
@@ -15,10 +16,14 @@ void testParser(Parser& p)
 	p.testParseSphere();
 	std::cout << std::endl;
 	p.testParsePlane();
+	std::cout << std::endl;
+	p.testScene();
 }
 
 int main()
 {
 	Parser p("scenes/hi.rt");
 	testParser(p);
+	Scene s = p.getScene();
+	s.rendering();
 }

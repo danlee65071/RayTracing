@@ -5,7 +5,4 @@
 #ifndef RT_RAYTRACING_HPP
 #define RT_RAYTRACING_HPP
 
-#include <iostream>
-#include "Parser.hpp"
-
 #endif //RT_RAYTRACING_HPP

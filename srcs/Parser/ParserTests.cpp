@@ -12,7 +12,7 @@ void Parser::testReadFile()
 
 void Parser::testParseAmbient()
 {
-	for (auto& el: this->_v_ambient)
+	for (auto& el: this->_vAmbient)
 	{
 		if (el->key != "A") continue;
 		std::cout << "key: " << el->key << std::endl;
@@ -26,7 +26,7 @@ void Parser::testParseAmbient()
 
 void Parser::testParseCamera()
 {
-	for (auto& el: this->_v_camera)
+	for (auto& el: this->_vCamera)
 	{
 		std::cout << "key: " << el->key << std::endl;
 		std::cout << "coordinates:\n";
@@ -43,7 +43,7 @@ void Parser::testParseCamera()
 
 void Parser::testParseLight()
 {
-	for (auto& p: this->_v_ambient)
+	for (auto& p: this->_vAmbient)
 	{
 		if (p->key != "L") continue;
 		auto el = std::static_pointer_cast<s_light>(p);
@@ -62,7 +62,7 @@ void Parser::testParseLight()
 
 void Parser::testParseCylinder()
 {
-	for (auto& p: this->_v_figure)
+	for (auto& p: this->_vFigure)
 	{
 		if (p->key != "cy") continue;
 		auto el = std::static_pointer_cast<s_cylinder>(p);
@@ -86,7 +86,7 @@ void Parser::testParseCylinder()
 
 void Parser::testParseSphere()
 {
-	for (auto& p: this->_v_figure)
+	for (auto& p: this->_vFigure)
 	{
 		if (p->key != "sp") continue;
 		auto el = std::static_pointer_cast<s_sphere>(p);
@@ -105,7 +105,7 @@ void Parser::testParseSphere()
 
 void Parser::testParsePlane()
 {
-	for (auto& p: this->_v_figure)
+	for (auto& p: this->_vFigure)
 	{
 		if (p->key != "pl") continue;
 		auto el = std::static_pointer_cast<s_plane>(p);
@@ -123,4 +123,14 @@ void Parser::testParsePlane()
 		std::cout << "green: " << static_cast<int>(el->color.getGreen()) << std::endl;
 		std::cout << "blue: " << static_cast<int>(el->color.getBlue()) << std::endl << std::endl;
 	}
+}
+
+void Parser::testScene()
+{
+	for (auto& p: this->_scene.getAmbientV())
+		p->PrintParams();
+	for (auto& p: this->_scene.getCameraV())
+		p->PrintParams();
+	for (auto& p: this->_scene.getFigureV())
+		p->PrintParams();
 }

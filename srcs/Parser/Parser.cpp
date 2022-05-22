@@ -8,6 +8,7 @@ Parser::Parser(std::string fileName): _fileName(std::move(fileName))
 {
 	this->_readFile();
 	this->_parseConfig();
+	this->_createScene();
 }
 
 void Parser::_readFile()

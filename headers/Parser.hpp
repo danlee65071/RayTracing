@@ -12,32 +12,34 @@
 #include <sstream>
 #include "utils.hpp"
 #include "Color.hpp"
+#include "Scene.hpp"
 
 class Parser
 {
 private:
 	std::string									_fileName;
 	std::vector<std::string>					_vConfig;
-	std::vector<std::shared_ptr<s_ambient> >	_v_ambient;
-	std::vector<std::shared_ptr<s_camera> >		_v_camera;
-	std::vector<std::shared_ptr<s_figure> >		_v_figure;
+	std::vector<std::shared_ptr<s_ambient> >	_vAmbient;
+	std::vector<std::shared_ptr<s_camera> >		_vCamera;
+	std::vector<std::shared_ptr<s_figure> >		_vFigure;
 	std::stringstream							_ss;
+	Scene										_scene;
 
 public:
 	Parser() = default;
 	explicit Parser(std::string fileName);
 	~Parser() = default;
 
+//	parse config
 private:
-//	parser methods
 	void _readFile();
-//	check file methods
 	void _checkFileName() const;
 	static size_t _checkSpace(const std::string& line);
 	void _parseConfig();
-//	stringstream clear
 	void _ssClear();
-//	check objects methods
+
+//	parse objects methods
+private:
 	void _parseAmbient(const std::string& line);
 	void _parseCamera(const std::string& line);
 	void _parseLight(const std::string& line);
@@ -45,9 +47,15 @@ private:
 	void _parseSphere(const std::string& line);
 	void _parseCone(const std::string& line);
 	void _parsePlane(const std::string& line);
-//	parse params
+
 	template<class T>
 	static std::vector<T> _parseParamsToVec(const std::string& str);
+public:
+	[[nodiscard]] const Scene& getScene() const;
+
+//	create scene
+private:
+	void _createScene();
 
 //	test methods
 public:
@@ -58,6 +66,7 @@ public:
 	void testParseCylinder();
 	void testParseSphere();
 	void testParsePlane();
+	void testScene();
 
 //	exceptions
 private:

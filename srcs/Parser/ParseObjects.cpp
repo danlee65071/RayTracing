@@ -15,7 +15,7 @@ void Parser::_parseAmbient(const std::string &line)
 	this->_ss >> ambient.intensive;
 	this->_ss >> strColor;
 	ambient.color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
-	this->_v_ambient.push_back(std::make_shared<s_ambient>(ambient));
+	this->_vAmbient.push_back(std::make_shared<s_ambient>(ambient));
 }
 
 void Parser::_parseCamera(const std::string &line)
@@ -32,7 +32,7 @@ void Parser::_parseCamera(const std::string &line)
 	this->_ss >> strDirection;
 	camera.direction.setVector3f(Parser::_parseParamsToVec<float>(strDirection));
 	this->_ss >> camera.fov;
-	this->_v_camera.push_back(std::make_shared<s_camera>(camera));
+	this->_vCamera.push_back(std::make_shared<s_camera>(camera));
 }
 
 void Parser::_parseLight(const std::string &line)
@@ -49,7 +49,7 @@ void Parser::_parseLight(const std::string &line)
 	this->_ss >> light->intensive;
 	this->_ss >> strColor;
 	light->color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
-	this->_v_ambient.push_back(std::static_pointer_cast<s_light>(light));
+	this->_vAmbient.push_back(std::static_pointer_cast<s_light>(light));
 }
 
 void Parser::_parseCylinder(const std::string &line)
@@ -70,7 +70,7 @@ void Parser::_parseCylinder(const std::string &line)
 	this->_ss >> cylinder->height;
 	this->_ss >> strColor;
 	cylinder->color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
-	this->_v_figure.push_back(std::static_pointer_cast<s_cylinder>(cylinder));
+	this->_vFigure.push_back(std::static_pointer_cast<s_cylinder>(cylinder));
 }
 
 void Parser::_parseSphere(const std::string &line)
@@ -87,12 +87,7 @@ void Parser::_parseSphere(const std::string &line)
 	this->_ss >> sphere->diameter;
 	this->_ss >> strColor;
 	sphere->color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
-	this->_v_figure.push_back(std::static_pointer_cast<s_sphere>(sphere));
-}
-
-void Parser::_parseCone(const std::string &line)
-{
-
+	this->_vFigure.push_back(std::static_pointer_cast<s_sphere>(sphere));
 }
 
 void Parser::_parsePlane(const std::string &line)
@@ -111,7 +106,12 @@ void Parser::_parsePlane(const std::string &line)
 	plane->direction.setVector3f(Parser::_parseParamsToVec<float>(strDirection));
 	this->_ss >> strColor;
 	plane->color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
-	this->_v_figure.push_back(std::static_pointer_cast<s_plane>(plane));
+	this->_vFigure.push_back(std::static_pointer_cast<s_plane>(plane));
+}
+
+void Parser::_parseCone(const std::string &line)
+{
+
 }
 
 template<class T>

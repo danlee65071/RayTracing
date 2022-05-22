@@ -27,3 +27,22 @@ uint8_t Color::getBlue() const
 {
 	return this->_b;
 }
+
+Color &Color::operator=(const Color &other)
+{
+	if (this != &other)
+	{
+		this->_r = other._r;
+		this->_g = other._g;
+		this->_b = other._b;
+	}
+	return *this;
+}
+
+void Color::PrintParams() const
+{
+	std::cout << "color:\n";
+	std::cout << "red: " << static_cast<int>(this->getRed()) << std::endl;
+	std::cout << "green: " << static_cast<int>(this->getGreen()) << std::endl;
+	std::cout << "blue: " << static_cast<int>(this->getBlue()) << std::endl;
+}

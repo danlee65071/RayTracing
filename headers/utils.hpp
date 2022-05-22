@@ -13,6 +13,7 @@ struct s_ambient
 	std::string	key;
 	float		intensive;
 	Color		color;
+	virtual ~s_ambient() = default;
 };
 
 struct s_light: public s_ambient
@@ -32,6 +33,7 @@ struct s_figure
 {
 	std::string	key;
 	Color		color;
+	virtual ~s_figure() = default;
 } ;
 
 struct s_plane: public s_figure
@@ -57,5 +59,14 @@ struct s_cylinder: public s_figure
 struct s_cone: public s_figure
 {
 };
+
+typedef struct s_data
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_data;
 
 #endif //RT_UTILS_HPP

@@ -27,3 +27,22 @@ float Vector3f::getZ() const
 {
 	return this->_z;
 }
+
+Vector3f &Vector3f::operator=(const Vector3f& other)
+{
+	if (this != &other)
+	{
+		this->_x = other._x;
+		this->_y = other._y;
+		this->_z = other._z;
+	}
+	return *this;
+}
+
+void Vector3f::PrintParams() const
+{
+	std::cout << "Vector:\n";
+	std::cout << "x: " << this->_x << std::endl;
+	std::cout << "y: " << this->_y << std::endl;
+	std::cout << "z: " << this->_z << std::endl;
+}
