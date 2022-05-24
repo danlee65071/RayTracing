@@ -70,15 +70,13 @@ PATH_OBJS = $(addprefix $(DIR_OBJS)/, $(OBJS))
 DIR_SRCS_OBJS = $(addprefix $(DIR_OBJS)/, $(DIRS))
 
 #Добавление библиотеки mlx
-MLX = libmlx.dylib
-MLX_FLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
-MLX_DIR = mlx
+OPENGL_FLAGS = -framework GLUT -framework OpenGL
 
 # компилятор
 CC = clang++
 
 # флаги
-FLAGS =  -g -O3 -std=c++17
+FLAGS = -g -O3 -std=c++17
 
 # команда удаления
 RM = rm -rf
@@ -92,13 +90,8 @@ all: $(NAME)
 
 # получение исполняемого файла
 $(NAME): write_logo create_dirs $(PATH_OBJS)
-	@#Рекурсивный вызов make в директории mlx, в директории mlx получится архив libmlx.dylib, а также передача всех предупреждений на нулевое устройство (2> /dev/null)
-	@make -sC $(MLX_DIR) 2> /dev/null
-	@#Копирование архива libmlx.dylib из директории mlx в директерию проекта
-	@cp $(MLX_DIR)/$(MLX) .
-	@echo "$(GREEN)\nMLX was compiled $(RESET)"
 	@echo "$(GREEN)\nObjects was created $(RESET)"
-	@$(CC) $(FLAGS) $(MLX_FLAGS) -I $(DIR_HEADERS) $(MLX) $(PATH_OBJS) -o $@
+	@$(CC) $(FLAGS) $(OPENGL_FLAGS) -I $(DIR_HEADERS) $(MLX) $(PATH_OBJS) -o $@
 	@echo "$(GREEN)Simply the best hard multi-d ray-tracing mother lover by peace dukes was compiled $(RESET)"
 
 
@@ -151,15 +144,11 @@ create_dirs:
 #Объектные файлы зависят от си файлов
 #Ещё есть зависимость от хэдеров. Это нужно, чтобы при измении хэдера проект перекомпилировался
 $(DIR_OBJS)/%.o: $(DIR_SRCS)/%.cpp $(PATH_HEADERS) Makefile
-	@$(CC) $(FLAGS) -I $(MLX_DIR) -I $(DIR_HEADERS) -c $< -o $@
+	@$(CC) $(FLAGS) -I $(DIR_HEADERS) -c $< -o $@
 	@echo "$(GREEN).$(RESET)\c"
 
 #Абстрактная цель clean
 clean:
-	#Удаление libmlx.dylib в директории проекта
-	@$(RM) $(MLX)
-    #Рекурсивный вызов make clean в директории mlx
-	@make clean -sC $(MLX_DIR)
 	@$(RM) $(DIR_OBJS)
 	@echo "$(GREEN) clean instruction was executed $(RESET)"
 

@@ -20,10 +20,10 @@ void testParser(Parser& p)
 	p.testScene();
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	Parser p("scenes/hi.rt");
 	testParser(p);
 	Scene s = p.getScene();
-	s.rendering();
+	s.rendering(argc, argv);
 }

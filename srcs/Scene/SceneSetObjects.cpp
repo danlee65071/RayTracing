@@ -48,6 +48,3 @@ const std::vector<std::shared_ptr<IFigure> > &Scene::getFigureV() const
 {
 	return this->_vFigure;
 }
-
-
-

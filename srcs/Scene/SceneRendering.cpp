@@ -4,25 +4,55 @@
 
 #include "Scene.hpp"
 
-void Scene::rendering()
+Scene*	g_currentInstance;
+
+extern "C"
+void g_displayCallBack()
+{
+	g_currentInstance->_display();
+}
+
+void Scene::rendering(int argc, char** argv)
 {
 	this->_winWidth = 700;
 	this->_winHeight = 700;
-	this->_mlx = mlx_init();
-	this->_mlx_win = mlx_new_window(this->_mlx, this->_winWidth, this->_winHeight,(char*)"RT");
-	this->_img.img = mlx_new_image(this->_mlx, this->_winWidth, this->_winHeight);
-	this->_img.addr = mlx_get_data_addr(this->_img.img, &this->_img.bits_per_pixel,
-									   &this->_img.line_length, &this->_img.endian);
-//	rendering
-	Scene::_myMlxPixePut(&this->_img, 5, 5, 0x00FF0000);
-	mlx_put_image_to_window(this->_mlx, this->_mlx_win, this->_img.img, 0, 0);
-	mlx_loop(this->_mlx);
+	glutInit(&argc,argv);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitWindowSize(this->_winWidth, this->_winHeight);
+	glutInitWindowPosition(0,0);
+	glutCreateWindow("RT");
+	this->_init();
+	this->_setUpDisplayCallBack();
+	glutMainLoop();
 }
 
-void Scene::_myMlxPixePut(t_data *data, int x, int y, int color)
+void Scene::_init()
 {
-	char	*dst;
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_FLAT);
+	this->_makeCheckImage();
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+}
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+void Scene::_makeCheckImage()
+{
+	int c;
+	c = 255;
+	_checkImage[0][0][0]=(GLubyte)c;
+	_checkImage[0][0][1]=(GLubyte)c;
+	_checkImage[0][0][2]=(GLubyte)c;
+}
+
+void Scene::_display()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glRasterPos2i(0,0);
+	glDrawPixels(1, 1, GL_RGB, GL_UNSIGNED_BYTE, this->_checkImage);
+	glFlush();
+}
+
+void Scene::_setUpDisplayCallBack()
+{
+	::g_currentInstance = this;
+	::glutDisplayFunc(::g_displayCallBack);
 }

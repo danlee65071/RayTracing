@@ -16,7 +16,10 @@
 #include "Sphere.hpp"
 #include "Cylinder.hpp"
 #include "Plane.hpp"
-#include "mlx.h"
+#define GL_SILENCE_DEPRECATION
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
 
 class Scene
 {
@@ -26,13 +29,10 @@ private:
 	std::vector<std::shared_ptr<Camera> >	_vCamera;
 	std::vector<std::shared_ptr<IFigure> >	_vFigure;
 
-//	mlx vars
 private:
-	void		*_mlx{};
-	void		*_mlx_win{};
-	t_data		_img{};
-	int			_winWidth{};
-	int			_winHeight{};
+	int										_winWidth{};
+	int										_winHeight{};
+	GLubyte									_checkImage[1][1][3];
 
 public:
 	Scene() = default;
@@ -40,9 +40,12 @@ public:
 
 //	rendering
 public:
-	void rendering();
+	void rendering(int argc, char** argv);
+	void _display();
 private:
-	static void _myMlxPixePut(t_data *data, int x, int y, int color);
+	void _init();
+	void _makeCheckImage();
+	void _setUpDisplayCallBack();
 
 //	set objects
 public:
@@ -57,6 +60,5 @@ public:
 	[[nodiscard]] const std::vector<std::shared_ptr<Camera> >& getCameraV() const;
 	[[nodiscard]] const std::vector<std::shared_ptr<IFigure> >& getFigureV() const;
 };
-
 
 #endif //RT_SCENE_HPP
