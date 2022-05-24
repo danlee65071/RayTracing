@@ -46,3 +46,18 @@ void Vector3f::PrintParams() const
 	std::cout << "y: " << this->_y << std::endl;
 	std::cout << "z: " << this->_z << std::endl;
 }
+
+Vector3f Vector3f::operator-(const Vector3f &other) const
+{
+	Vector3f res;
+
+	res._x = this->_x - other._x;
+	res._y = this->_y - other._y;
+	res._z = this->_z - other._z;
+	return res;
+}
+
+float Vector3f::dot(const Vector3f &other) const
+{
+	return (this->_x * other._x + this->_y * other._y + this->_z * other._z);
+}

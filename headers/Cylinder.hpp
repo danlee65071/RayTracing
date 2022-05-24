@@ -5,9 +5,9 @@
 #ifndef RT_CYLINDER_HPP
 #define RT_CYLINDER_HPP
 
-#include "IFigure.hpp"
+#include "AFigure.hpp"
 
-class Cylinder: public IFigure
+class Cylinder: public AFigure
 {
 private:
 	Vector3f	_orientation{};

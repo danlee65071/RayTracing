@@ -23,3 +23,8 @@ void Camera::PrintParams() const
 	std::cout << "fov: " << this->_fov << std::endl;
 	std::cout << std::endl;
 }
+
+const Vector3f &Camera::getCoordinates() const
+{
+	return this->_coordinates;
+}

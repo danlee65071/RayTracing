@@ -53,7 +53,7 @@ HEADERS 	= 		RayTracing.hpp \
 					Ambient.hpp \
 					Light.hpp \
 					Camera.hpp \
-					IFigure.hpp \
+					AFigure.hpp \
 					Sphere.hpp \
 					Cylinder.hpp \
 					Plane.hpp

@@ -21,6 +21,9 @@ public:
 	explicit Camera(const s_camera& cameraParams);
 	~Camera() = default;
 
+public:
+	[[nodiscard]] const Vector3f& getCoordinates() const;
+
 //	Print params
 public:
 	void PrintParams() const;

@@ -44,7 +44,7 @@ void Scene::SetFigure(const std::vector<std::shared_ptr<s_figure>> &v)
 	}
 }
 
-const std::vector<std::shared_ptr<IFigure> > &Scene::getFigureV() const
+const std::vector<std::shared_ptr<AFigure> > &Scene::getFigureV() const
 {
 	return this->_vFigure;
 }

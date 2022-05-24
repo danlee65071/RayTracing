@@ -5,10 +5,10 @@
 #ifndef RT_PLANE_HPP
 #define RT_PLANE_HPP
 
-#include "IFigure.hpp"
+#include "AFigure.hpp"
 #include "Vector3f.hpp"
 
-class Plane: public IFigure
+class Plane: public AFigure
 {
 private:
 	Vector3f	_direction{};

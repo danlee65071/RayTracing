@@ -7,13 +7,14 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 class Vector3f
 {
 private:
-	float	_x;
-	float	_y;
-	float	_z;
+	float	_x{};
+	float	_y{};
+	float	_z{};
 public:
 	Vector3f() = default;
 	explicit Vector3f(float x, float y, float z);
@@ -25,6 +26,10 @@ public:
 	[[nodiscard]] float getY() const;
 	[[nodiscard]] float getZ() const;
 
+//	operators
+public:
+	[[nodiscard]]Vector3f operator-(const Vector3f& other) const;
+	[[nodiscard]]float dot(const Vector3f& other) const;
 //	print params
 public:
 	void PrintParams() const;
