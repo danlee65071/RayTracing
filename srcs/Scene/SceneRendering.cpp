@@ -35,11 +35,6 @@ void Scene::_init()
 
 void Scene::_makeImage()
 {
-//	int c = 255;
-//	_checkImage[0][0][0]=(GLubyte)c;
-//	_checkImage[0][0][1]=(GLubyte)c;
-//	_checkImage[0][0][2]=(GLubyte)c;
-
 //	check count camera
 	for (float x = -1; x <= 1;)
 	{
@@ -47,9 +42,9 @@ void Scene::_makeImage()
 		{
 			Vector3f D((x * this->_viewPortWidth) / 2, (y * this->_viewPortHeight) / 2, this->_distToViewPort);
 			auto color = this->_traceRay(D);
-			_checkImage[x][0][0]=(GLubyte)color.getRed();
-			_checkImage[x][0][1]=(GLubyte)color.getGreen();
-			_checkImage[x][0][2]=(GLubyte)color.getBlue();
+			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][0]=(GLubyte)color.getRed();
+			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][1]=(GLubyte)color.getGreen();
+			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][2]=(GLubyte)color.getBlue();
 			y += 2. / Scene::_winHeight;
 		}
 		x += 2. / Scene::_winWidth;
@@ -59,9 +54,9 @@ void Scene::_makeImage()
 void Scene::_display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glRasterPos2f(-0.5,-0.5);
+	glRasterPos2f(-1, -1);
 	this->_makeImage();
-	glDrawPixels(1, 1, GL_RGB, GL_UNSIGNED_BYTE, this->_checkImage);
+	glDrawPixels(Scene::_winWidth, Scene::_winHeight, GL_RGB, GL_UNSIGNED_BYTE, this->_checkImage);
 	glFlush();
 }
 
@@ -73,7 +68,7 @@ void Scene::_setUpDisplayCallBack()
 
 Color Scene::_traceRay(const Vector3f &D)
 {
-	std::shared_ptr<Camera> camera = std::static_pointer_cast<Camera>(_vCamera[0]);
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(*(this->_vCamera[0]));
 	std::shared_ptr<AFigure> closest_shape = nullptr;
 	float closest_t = std::numeric_limits<float>::infinity();
 

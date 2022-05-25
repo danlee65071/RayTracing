@@ -17,7 +17,7 @@ public:
 	~Sphere() override = default;
 
 public:
-	[[nodiscard]] virtual std::pair<float, float> intersectRay(const Vector3f& O, const Vector3f& D) override;
+	[[nodiscard]] std::pair<float, float> intersectRay(const Vector3f& O, const Vector3f& D) override;
 
 //	print params
 public:

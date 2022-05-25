@@ -29,6 +29,7 @@ Sphere::intersectRay(const Vector3f &O, const Vector3f &D)
 {
 	std::pair<float, float> decision(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity());
 	Vector3f OC = O - this->_center;
+
 	float k1 = D.dot(D);
 	float k2 = 2 * OC.dot(D);
 	float k3 = OC.dot(OC) - powf(this->_diameter / 2, 2);

@@ -29,7 +29,11 @@ public:
 //	operators
 public:
 	[[nodiscard]]Vector3f operator-(const Vector3f& other) const;
+	[[nodiscard]]Vector3f operator+(const Vector3f& other) const;
+	[[nodiscard]]Vector3f mult_num(float num) const;
 	[[nodiscard]]float dot(const Vector3f& other) const;
+	[[nodiscard]]float len() const;
+	void norm();
 //	print params
 public:
 	void PrintParams() const;

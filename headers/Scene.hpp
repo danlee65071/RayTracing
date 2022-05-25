@@ -33,11 +33,11 @@ private:
 private:
 	static const int						_winWidth{700};
 	static const int						_winHeight{700};
-	GLubyte									_checkImage[_winWidth][_winHeight][3];
+	GLubyte									_checkImage[_winHeight][_winWidth][3]{};
 	float									_distToViewPort{1};
-	float									_aspectRatio;
+	float									_aspectRatio{};
 	float									_viewPortWidth{1};
-	float									_viewPortHeight;
+	float									_viewPortHeight{};
 
 public:
 	Scene() = default;

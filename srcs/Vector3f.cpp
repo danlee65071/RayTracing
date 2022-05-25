@@ -61,3 +61,38 @@ float Vector3f::dot(const Vector3f &other) const
 {
 	return (this->_x * other._x + this->_y * other._y + this->_z * other._z);
 }
+
+float Vector3f::len() const
+{
+	return sqrtf(this->_x * this->_x + this->_y * this->_y
+				 + this->_z * this->_z);
+}
+
+void Vector3f::norm()
+{
+	float len = this->len();
+
+	this->_x /= len;
+	this->_y /= len;
+	this->_z /= len;
+}
+
+Vector3f Vector3f::mult_num(float num) const
+{
+	Vector3f res;
+
+	res._x = this->_x * num;
+	res._y = this->_y * num;
+	res._z = this->_z * num;
+	return res;
+}
+
+Vector3f Vector3f::operator+(const Vector3f &other) const
+{
+	Vector3f res;
+
+	res._x = this->_x + other._x;
+	res._y = this->_y + other._y;
+	res._z = this->_z + other._z;
+	return res;
+}
