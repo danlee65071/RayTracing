@@ -12,7 +12,7 @@
 class Ambient
 {
 protected:
-	std::string	_key{};
+	std::string	_key{"A"};
 	float		_intensive{};
 	Color		_color{};
 public:
@@ -25,6 +25,15 @@ public:
 	[[nodiscard]] const std::string& getKey() const;
 	[[nodiscard]] float getIntensive() const;
 	[[nodiscard]] const Color& getColor() const;
+
+//	set intensive
+public:
+	void setIntensive(float i);
+
+//	operators
+public:
+	[[nodiscard]] Ambient operator+(Ambient& other);
+	Ambient& operator=(const Ambient& other);
 
 //	print params
 public:

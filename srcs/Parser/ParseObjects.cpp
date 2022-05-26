@@ -70,6 +70,7 @@ void Parser::_parseCylinder(const std::string &line)
 	this->_ss >> cylinder->height;
 	this->_ss >> strColor;
 	cylinder->color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
+	this->_ss >> cylinder->specular;
 	this->_vFigure.push_back(std::static_pointer_cast<s_cylinder>(cylinder));
 }
 
@@ -87,6 +88,7 @@ void Parser::_parseSphere(const std::string &line)
 	this->_ss >> sphere->diameter;
 	this->_ss >> strColor;
 	sphere->color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
+	this->_ss >> sphere->specular;
 	this->_vFigure.push_back(std::static_pointer_cast<s_sphere>(sphere));
 }
 
@@ -106,6 +108,7 @@ void Parser::_parsePlane(const std::string &line)
 	plane->direction.setVector3f(Parser::_parseParamsToVec<float>(strDirection));
 	this->_ss >> strColor;
 	plane->color.setColor(Parser::_parseParamsToVec<uint8_t>(strColor));
+	this->_ss >> plane->specular;
 	this->_vFigure.push_back(std::static_pointer_cast<s_plane>(plane));
 }
 

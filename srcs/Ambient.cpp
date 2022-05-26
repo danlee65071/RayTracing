@@ -34,3 +34,27 @@ const Color &Ambient::getColor() const
 {
 	return this->_color;
 }
+
+Ambient Ambient::operator+(Ambient& other)
+{
+	Ambient res{};
+
+	res._color = this->_color + other._color.multNum(other.getIntensive());
+	res._intensive = this->_intensive + other._intensive;
+	return res;
+}
+
+Ambient &Ambient::operator=(const Ambient &other)
+{
+	if (this != &other)
+	{
+		this->_color = other._color;
+		this->_intensive = other._intensive;
+	}
+	return *this;
+}
+
+void Ambient::setIntensive(float i)
+{
+	this->_intensive = i > 1 ? 1 : i;
+}

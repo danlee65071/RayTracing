@@ -46,3 +46,21 @@ void Color::PrintParams() const
 	std::cout << "green: " << static_cast<int>(this->getGreen()) << std::endl;
 	std::cout << "blue: " << static_cast<int>(this->getBlue()) << std::endl;
 }
+
+Color Color::operator+(const Color& other) const
+{
+	Color res{};
+
+	res._r = (this->_r + other._r) > 255 ? 255 : this->_r + other._r;
+	res._g = (this->_g + other._g) > 255 ? 255 : this->_g + other._g;
+	res._b = (this->_b + other._b) > 255 ? 255 : this->_b + other._b;
+	return res;
+}
+
+Color& Color::multNum(float num)
+{
+	this->_r = static_cast<int>(static_cast<float>(this->_r) * num) > 255 ? 255 : static_cast<int>(static_cast<float>(this->_r) * num);
+	this->_g = static_cast<int>(static_cast<float>(this->_g) * num) > 255 ? 255 : static_cast<int>(static_cast<float>(this->_g) * num);
+	this->_b = static_cast<int>(static_cast<float>(this->_b) * num) > 255 ? 255 : static_cast<int>(static_cast<float>(this->_b) * num);
+	return *this;
+}

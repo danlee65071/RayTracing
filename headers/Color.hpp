@@ -11,9 +11,9 @@
 class Color
 {
 private:
-	uint8_t	_r;
-	uint8_t	_g;
-	uint8_t	_b;
+	int	_r;
+	int	_g;
+	int	_b;
 public:
 	Color() = default;
 	explicit Color(uint8_t r, uint8_t g, uint8_t b);
@@ -24,6 +24,11 @@ public:
 	[[nodiscard]] uint8_t getRed() const;
 	[[nodiscard]] uint8_t getGreen() const;
 	[[nodiscard]] uint8_t getBlue() const;
+
+//	operators
+public:
+	[[nodiscard]] Color operator+(const Color& other) const;
+	[[nodiscard]] Color& multNum(float num);
 
 //	print params
 public:

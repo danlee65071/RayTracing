@@ -6,6 +6,13 @@
 
 Vector3f::Vector3f(float x, float y, float z): _x(x), _y(y), _z(z) {}
 
+Vector3f::Vector3f(const Vector3f &other)
+{
+	this->_x = other._x;
+	this->_y = other._y;
+	this->_z = other._z;
+}
+
 void Vector3f::setVector3f(const std::vector<float>& v)
 {
 	this->_x = v[0];
@@ -77,7 +84,7 @@ void Vector3f::norm()
 	this->_z /= len;
 }
 
-Vector3f Vector3f::mult_num(float num) const
+Vector3f Vector3f::multNum(float num) const
 {
 	Vector3f res;
 

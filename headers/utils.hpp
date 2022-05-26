@@ -33,6 +33,7 @@ struct s_figure
 {
 	std::string	key;
 	Color		color;
+	float		specular;
 	virtual ~s_figure() = default;
 } ;
 

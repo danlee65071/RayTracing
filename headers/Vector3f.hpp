@@ -18,6 +18,7 @@ private:
 public:
 	Vector3f() = default;
 	explicit Vector3f(float x, float y, float z);
+	Vector3f(const Vector3f& other);
 	Vector3f& operator=(const Vector3f& other);
 	~Vector3f() = default;
 
@@ -30,7 +31,7 @@ public:
 public:
 	[[nodiscard]]Vector3f operator-(const Vector3f& other) const;
 	[[nodiscard]]Vector3f operator+(const Vector3f& other) const;
-	[[nodiscard]]Vector3f mult_num(float num) const;
+	[[nodiscard]]Vector3f multNum(float num) const;
 	[[nodiscard]]float dot(const Vector3f& other) const;
 	[[nodiscard]]float len() const;
 	void norm();

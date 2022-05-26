@@ -11,6 +11,7 @@ Sphere::Sphere(const s_sphere &sphereParams)
 	this->_center = sphereParams.center;
 	this->_diameter = sphereParams.diameter;
 	this->_color = sphereParams.color;
+	this->_specular = sphereParams.specular;
 }
 
 void Sphere::PrintParams() const
@@ -21,6 +22,7 @@ void Sphere::PrintParams() const
 	this->_center.PrintParams();
 	std::cout << "diameter: " << this->_diameter << std::endl;
 	this->_color.PrintParams();
+	std::cout << "specular: " << this->_specular << std::endl;
 	std::cout << std::endl;
 }
 
@@ -40,4 +42,10 @@ Sphere::intersectRay(const Vector3f &O, const Vector3f &D)
 	decision.first = (-k2 + sqrtf(discriminant)) / (2 * k1);
 	decision.second = (-k2 - sqrtf(discriminant)) / (2 * k1);
 	return decision;
+}
+
+void Sphere::setN(const Vector3f& P)
+{
+	this->_n = P - this->_center;
+	this->_n.norm();
 }

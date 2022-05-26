@@ -51,7 +51,9 @@ private:
 	void _init();
 	void _makeImage();
 	void _setUpDisplayCallBack();
-	Color _traceRay(const Vector3f& D);
+	[[nodiscard]] Color _traceRay(const Vector3f& D, int depth = 3);
+	[[nodiscard]] Ambient _computeLightning(const Vector3f& P, const Vector3f& N, const Vector3f& V, int specular);
+	[[nodiscard]] static Vector3f _reflectRay(const Vector3f& D, const Vector3f& N);
 
 //	set objects
 public:
