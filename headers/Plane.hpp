@@ -6,16 +6,19 @@
 #define RT_PLANE_HPP
 
 #include "AFigure.hpp"
-#include "Vector3f.hpp"
 
 class Plane: public AFigure
 {
-private:
-	Vector3f	_direction{};
 public:
 	Plane() = default;
 	explicit Plane(const s_plane& planeParams);
 	~Plane() override = default;
+
+private:
+	void setN(const Vector3f& P) override {};
+
+public:
+	[[nodiscard]] std::pair<float, float> intersectRay(const Vector3f& O, const Vector3f& D) override;
 
 //	print params
 public:

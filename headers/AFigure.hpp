@@ -17,7 +17,7 @@ protected:
 	Vector3f	_center;
 	Color		_color;
 	Vector3f	_n;
-	int 		_specular;
+	float 		_specular;
 public:
 	virtual ~AFigure() = default;
 
@@ -26,7 +26,7 @@ public:
 	[[nodiscard]] const Color& getColor() const { return this->_color; };
 	[[nodiscard]] virtual std::pair<float, float> intersectRay(const Vector3f& O, const Vector3f& D) = 0;
 	[[nodiscard]] const Vector3f& getNorm() const { return this->_n; };
-	[[nodiscard]] int getSpecular() const { return this->_specular; }
+	[[nodiscard]] float getSpecular() const { return this->_specular; }
 	virtual void setN(const Vector3f& P) = 0;
 
 //	print params

@@ -77,24 +77,10 @@ void Scene::_setUpDisplayCallBack()
 Color Scene::_traceRay(const Vector3f &D, int depth)
 {
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(*(this->_vCamera[0]));
-	std::shared_ptr<AFigure> closest_shape = nullptr;
 	float closest_t = std::numeric_limits<float>::infinity();
 
-	for (auto& fig: this->_vFigure)
-	{
-		if (fig->getKey() != "sp") continue; // delete
-		auto decision = fig->intersectRay(camera->getCoordinates(), D);
-		if (decision.first > 1 && decision.first < std::numeric_limits<float>::infinity() && decision.first < closest_t)
-		{
-			closest_t = decision.first;
-			closest_shape = std::static_pointer_cast<AFigure>(fig);
-		}
-		if (decision.second > 1 && decision.second < std::numeric_limits<float>::infinity() && decision.second < closest_t)
-		{
-			closest_t = decision.second;
-			closest_shape = std::static_pointer_cast<AFigure>(fig);
-		}
-	}
+	std::shared_ptr<AFigure> closest_shape = this->_closestIntersection(camera->getCoordinates(), D, closest_t);
+
 	if (closest_shape == nullptr)
 		return Color(0, 0, 0);
 	Vector3f P(camera->getCoordinates() + D.multNum(closest_t));
@@ -104,7 +90,7 @@ Color Scene::_traceRay(const Vector3f &D, int depth)
 	return color;
 }
 
-Ambient Scene::_computeLightning(const Vector3f& P, const Vector3f& N, const Vector3f& V, int specular)
+Ambient Scene::_computeLightning(const Vector3f& P, const Vector3f& N, const Vector3f& V, float specular)
 {
 	Ambient l{};
 
@@ -116,18 +102,24 @@ Ambient Scene::_computeLightning(const Vector3f& P, const Vector3f& N, const Vec
 		else if (light->getKey() == "L")
 		{
 			auto L = std::static_pointer_cast<Light>(light)->getCoordinates() - P;
+
+			float shadow_t = std::numeric_limits<float>::infinity();
+			auto shadow_fig = this->_closestIntersection(P, L, shadow_t, 0.001, 1);
+			if (shadow_fig != nullptr) continue;
+
 			auto NdotL = N.dot(L);
 			if (NdotL > 0)
 			{
 				l.setIntensive(l.getIntensive() * NdotL / (N.len() * L.len()));
 				l = l + *light;
 			}
-			if (specular != -1)
+
+			if (specular > 0.)
 			{
 				auto R = N.multNum(2 * N.dot(L)) - L;
 				auto RDotV = R.dot(V);
 				if (RDotV > 0)
-					l.setIntensive(l.getIntensive() + (light->getIntensive() * powf(RDotV / (R.len() * V.len()), static_cast<float>(specular))));
+					l.setIntensive(l.getIntensive() + (light->getIntensive() * powf(RDotV / (R.len() * V.len()), specular * 1000)));
 			}
 		}
 	}
@@ -137,5 +129,27 @@ Ambient Scene::_computeLightning(const Vector3f& P, const Vector3f& N, const Vec
 Vector3f Scene::_reflectRay(const Vector3f& D, const Vector3f& N)
 {
 	return N.multNum(2 * N.dot(D)) - D;
+}
+
+std::shared_ptr<AFigure> Scene::_closestIntersection(const Vector3f &O, const Vector3f &D, float& closest_t, float min, float max)
+{
+	std::shared_ptr<AFigure> closest_shape = nullptr;
+
+	for (auto& fig: this->_vFigure)
+	{
+		if (fig->getKey() != "sp" && fig->getKey() != "pl") continue; // delete
+		auto decision = fig->intersectRay(O, D);
+		if (decision.first > min && decision.first < max && decision.first < closest_t)
+		{
+			closest_t = decision.first;
+			closest_shape = std::static_pointer_cast<AFigure>(fig);
+		}
+		if (decision.second > min && decision.second < max && decision.second < closest_t)
+		{
+			closest_t = decision.second;
+			closest_shape = std::static_pointer_cast<AFigure>(fig);
+		}
+	}
+	return closest_shape;
 }
 

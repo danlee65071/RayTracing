@@ -127,6 +127,7 @@ void Parser::testParsePlane()
 
 void Parser::testScene()
 {
+	std::cout << "scene test\n";
 	for (auto& p: this->_scene.getAmbientV())
 		p->PrintParams();
 	for (auto& p: this->_scene.getCameraV())

@@ -52,8 +52,10 @@ private:
 	void _makeImage();
 	void _setUpDisplayCallBack();
 	[[nodiscard]] Color _traceRay(const Vector3f& D, int depth = 3);
-	[[nodiscard]] Ambient _computeLightning(const Vector3f& P, const Vector3f& N, const Vector3f& V, int specular);
+	[[nodiscard]] Ambient _computeLightning(const Vector3f& P, const Vector3f& N, const Vector3f& V, float specular);
 	[[nodiscard]] static Vector3f _reflectRay(const Vector3f& D, const Vector3f& N);
+	[[nodiscard]] std::shared_ptr<AFigure> _closestIntersection(const Vector3f& O,
+		const Vector3f& D, float& closest_t, float min = 1, float max = std::numeric_limits<float>::infinity());
 
 //	set objects
 public:

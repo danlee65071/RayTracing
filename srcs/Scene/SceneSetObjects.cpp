@@ -37,10 +37,11 @@ void Scene::SetFigure(const std::vector<std::shared_ptr<s_figure>> &v)
 	{
 		if (el->key == "sp")
 			this->_vFigure.push_back(std::make_shared<Sphere>(dynamic_cast<s_sphere&>(*el)));
+		else if (el->key == "pl")
+			this->_vFigure.push_back(std::make_shared<Plane>(dynamic_cast<s_plane&>(*el)));
 //		else if (el->key == "cy")
 //			this->_vFigure.push_back(std::make_shared<Cylinder>(dynamic_cast<s_cylinder&>(*el)));
-//		else if (el->key == "pl")
-//			this->_vFigure.push_back(std::make_shared<Plane>(dynamic_cast<s_plane&>(*el)));
+
 	}
 }
 
