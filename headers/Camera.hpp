@@ -22,7 +22,14 @@ public:
 	~Camera() = default;
 
 public:
+	void setCoordinates(float x, float y, float z);
+	void setCoordinateX(float x);
+	void setCoordinateY(float y);
+	void setCoordinateZ(float z);
+
+public:
 	[[nodiscard]] const Vector3f& getCoordinates() const;
+	[[nodiscard]] const Vector3f& getDirection() const;
 
 //	Print params
 public:

@@ -16,11 +16,15 @@
 #include "Sphere.hpp"
 #include "Cylinder.hpp"
 #include "Plane.hpp"
+#include "Quaternion.hpp"
 #include <limits>
 #define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
+
+#define EPSILON 0.001
+#define INF std::numeric_limits<float>::infinity()
 
 class Scene
 {
@@ -31,8 +35,8 @@ private:
 	std::vector<std::shared_ptr<AFigure> >	_vFigure;
 
 private:
-	static const int						_winWidth{700};
-	static const int						_winHeight{700};
+	static const int						_winWidth{400};
+	static const int						_winHeight{400};
 	GLubyte									_checkImage[_winHeight][_winWidth][3]{};
 	float									_distToViewPort{1};
 	float									_aspectRatio{};
@@ -51,11 +55,12 @@ private:
 	void _init();
 	void _makeImage();
 	void _setUpDisplayCallBack();
-	[[nodiscard]] Color _traceRay(const Vector3f& D, int depth = 3);
+	[[nodiscard]] Color _traceRay(const Vector3f& O, const Vector3f& D, int depth = 5, float min = 1, float max = INF);
 	[[nodiscard]] Ambient _computeLightning(const Vector3f& P, const Vector3f& N, const Vector3f& V, float specular);
 	[[nodiscard]] static Vector3f _reflectRay(const Vector3f& D, const Vector3f& N);
 	[[nodiscard]] std::shared_ptr<AFigure> _closestIntersection(const Vector3f& O,
-		const Vector3f& D, float& closest_t, float min = 1, float max = std::numeric_limits<float>::infinity());
+		const Vector3f& D, float& closest_t, float min, float max);
+
 
 //	set objects
 public:

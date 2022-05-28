@@ -17,7 +17,8 @@ SRCS 		= 		main.cpp \
 					Camera.cpp \
 					Sphere.cpp \
 					Cylinder.cpp \
-					Plane.cpp
+					Plane.cpp \
+					Quaternion.cpp
 
 # Parser
 SRCS_PARSER =		Parser.cpp \
@@ -56,7 +57,8 @@ HEADERS 	= 		RayTracing.hpp \
 					AFigure.hpp \
 					Sphere.hpp \
 					Cylinder.hpp \
-					Plane.hpp
+					Plane.hpp \
+					Quaternion.hpp
 
 DIR_SRCS 	= 		srcs
 PATH_SRCS 	= 		$(addprefix $(DIR_SRCS)/, $(SRCS))

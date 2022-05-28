@@ -26,6 +26,9 @@ public:
 	[[nodiscard]] float getX() const;
 	[[nodiscard]] float getY() const;
 	[[nodiscard]] float getZ() const;
+	void setX(float x);
+	void setY(float y);
+	void setZ(float z);
 
 //	operators
 public:
@@ -33,8 +36,11 @@ public:
 	[[nodiscard]]Vector3f operator+(const Vector3f& other) const;
 	[[nodiscard]]Vector3f multNum(float num) const;
 	[[nodiscard]]float dot(const Vector3f& other) const;
+	[[nodiscard]]Vector3f product(const Vector3f& other) const;
+	[[nodiscard]]float getAngle(const Vector3f& other) const;
 	[[nodiscard]]float len() const;
 	void norm();
+	void absVector();
 //	print params
 public:
 	void PrintParams() const;

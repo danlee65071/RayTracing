@@ -12,6 +12,50 @@ void g_displayCallBack()
 	g_currentInstance->_display();
 }
 
+extern "C"
+void g_keyDown(unsigned char key, int x, int y)
+{
+	float step = 0.8;
+
+	(void)x;
+	(void)y;
+	if (key == 'w')
+	{
+		auto OVector = g_currentInstance->getCameraV()[0]->getDirection().multNum(step) + g_currentInstance->getCameraV()[0]->getCoordinates();
+		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
+		g_currentInstance->_display();
+	}
+	else if (key == 's')
+	{
+		auto OVector = g_currentInstance->getCameraV()[0]->getDirection().multNum(-step) + g_currentInstance->getCameraV()[0]->getCoordinates();
+		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
+		g_currentInstance->_display();
+	}
+	else if (key == 'a')
+	{
+		Vector3f OY(0, 1, 0);
+		Quaternion q(cosf(45 * M_PI / 180), OY.multNum(sinf(45 * M_PI / 180)));
+		auto OVector = g_currentInstance->getCameraV()[0]->getDirection();
+		OVector = q.rotateVector(OVector);
+		OVector = OVector.multNum(step) + g_currentInstance->getCameraV()[0]->getCoordinates();
+		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
+		g_currentInstance->_display();
+	}
+	else if (key == 'd')
+	{
+		Vector3f OY(0, 1, 0);
+		Quaternion q(cosf(45 * M_PI / 180), OY.multNum(sinf(45 * M_PI / 180)));
+		auto OVector = g_currentInstance->getCameraV()[0]->getDirection();
+		OVector = q.rotateVector(OVector);
+		OVector = OVector.multNum(-step) + g_currentInstance->getCameraV()[0]->getCoordinates();
+		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
+		g_currentInstance->_display();
+	}
+}
+
+extern "C"
+void changeView(int x, int y)
+
 void Scene::rendering(int argc, char** argv)
 {
 	glutInit(&argc,argv);
@@ -36,12 +80,20 @@ void Scene::_init()
 void Scene::_makeImage()
 {
 //	check count camera
+	Vector3f OZ(0, 0, 1);
+	float angle = this->_vCamera[0]->getDirection().getAngle(OZ);
+	auto rotationAxis = OZ.product(this->_vCamera[0]->getDirection());
+	Quaternion q(cos(angle / 2), rotationAxis.multNum(sin(angle / 2)));
+
+	rotationAxis.norm();
 	for (float x = -1; x <= 1;)
 	{
 		for (float y = -1; y <= 1;)
 		{
 			Vector3f D((x * this->_viewPortWidth) / 2, (y * this->_viewPortHeight) / 2, this->_distToViewPort);
-			auto color = this->_traceRay(D);
+			D = q.rotateVector(D);
+//			std::shared_ptr<Camera> camera = std::make_shared<Camera>(*(this->_vCamera[0]));
+			auto color = this->_traceRay(this->_vCamera[0]->getCoordinates(), D);
 
 			int r = color.getRed();
 			int g = color.getGreen();
@@ -53,9 +105,9 @@ void Scene::_makeImage()
 			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][0]= r;
 			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][1]= g;
 			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][2]= b;
-			y += 1. / Scene::_winHeight;
+			y += 2. / Scene::_winHeight;
 		}
-		x += 1. / Scene::_winWidth;
+		x += 2. / Scene::_winWidth;
 	}
 }
 
@@ -72,22 +124,29 @@ void Scene::_setUpDisplayCallBack()
 {
 	::g_currentInstance = this;
 	::glutDisplayFunc(::g_displayCallBack);
+	::glutKeyboardFunc(::g_keyDown);
+	::glutMotionFunc();
 }
 
-Color Scene::_traceRay(const Vector3f &D, int depth)
+Color Scene::_traceRay(const Vector3f& O, const Vector3f &D, int depth, float min, float max)
 {
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(*(this->_vCamera[0]));
-	float closest_t = std::numeric_limits<float>::infinity();
 
-	std::shared_ptr<AFigure> closest_shape = this->_closestIntersection(camera->getCoordinates(), D, closest_t);
+	float closest_t = INF;
+
+	std::shared_ptr<AFigure> closest_shape = this->_closestIntersection(O, D, closest_t, min, max);
 
 	if (closest_shape == nullptr)
 		return Color(0, 0, 0);
-	Vector3f P(camera->getCoordinates() + D.multNum(closest_t));
+	Vector3f P(O + D.multNum(closest_t));
 	closest_shape->setN(P);
 	auto light = this->_computeLightning(P, closest_shape->getNorm(), D.multNum(-1), closest_shape->getSpecular());
 	auto color = (closest_shape->getColor() + light.getColor()).multNum(light.getIntensive());
-	return color;
+	float r = closest_shape->getSpecular();
+	if (depth <= 0 || r <= 0)
+		return color;
+	auto R = Scene::_reflectRay(D.multNum(-1), closest_shape->getNorm());
+	Color reflectColor = this->_traceRay(P, R, depth - 1, EPSILON, INF);
+	return color.multNum(1 - r) + reflectColor.multNum(r);
 }
 
 Ambient Scene::_computeLightning(const Vector3f& P, const Vector3f& N, const Vector3f& V, float specular)
@@ -103,8 +162,8 @@ Ambient Scene::_computeLightning(const Vector3f& P, const Vector3f& N, const Vec
 		{
 			auto L = std::static_pointer_cast<Light>(light)->getCoordinates() - P;
 
-			float shadow_t = std::numeric_limits<float>::infinity();
-			auto shadow_fig = this->_closestIntersection(P, L, shadow_t, 0.001, 1);
+			float shadow_t = INF;
+			auto shadow_fig = this->_closestIntersection(P, L, shadow_t, EPSILON, 1);
 			if (shadow_fig != nullptr) continue;
 
 			auto NdotL = N.dot(L);

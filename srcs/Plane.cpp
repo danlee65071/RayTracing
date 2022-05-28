@@ -11,6 +11,7 @@ Plane::Plane(const s_plane &planeParams)
 	this->_center = planeParams.coordinates;
 	this->_n = planeParams.direction;
 	this->_n.norm();
+	this->_n.absVector();
 	this->_color = planeParams.color;
 	this->_specular = planeParams.specular;
 }
