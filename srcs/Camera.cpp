@@ -56,3 +56,11 @@ void Camera::setCoordinateZ(float z)
 {
 	this->_coordinates.setZ(z);
 }
+
+void Camera::setDirection(float x, float y, float z)
+{
+	this->_direction.setX(x);
+	this->_direction.setY(y);
+	this->_direction.setZ(z);
+	this->_direction.norm();
+}

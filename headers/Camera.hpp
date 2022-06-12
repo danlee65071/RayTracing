@@ -21,11 +21,16 @@ public:
 	explicit Camera(const s_camera& cameraParams);
 	~Camera() = default;
 
+//	set coordinates
 public:
 	void setCoordinates(float x, float y, float z);
 	void setCoordinateX(float x);
 	void setCoordinateY(float y);
 	void setCoordinateZ(float z);
+
+//	set direction
+public:
+	void setDirection(float x, float y, float z);
 
 public:
 	[[nodiscard]] const Vector3f& getCoordinates() const;

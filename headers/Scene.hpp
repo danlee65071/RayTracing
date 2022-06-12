@@ -18,13 +18,17 @@
 #include "Plane.hpp"
 #include "Quaternion.hpp"
 #include <limits>
+#include <fstream>
 #define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
+#include </Users/hcharlsi/goinfre/OpenCL-Registry/api/2.1/cl.hpp>
 
 #define EPSILON 0.001
 #define INF std::numeric_limits<float>::infinity()
+#define ANGLE_ROTATION_CAMERA (5 * M_PI / 180)
+#define STEP_CAMERA 0.8
 
 class Scene
 {
@@ -35,8 +39,8 @@ private:
 	std::vector<std::shared_ptr<AFigure> >	_vFigure;
 
 private:
-	static const int						_winWidth{400};
-	static const int						_winHeight{400};
+	static const int						_winWidth{300};
+	static const int						_winHeight{300};
 	GLubyte									_checkImage[_winHeight][_winWidth][3]{};
 	float									_distToViewPort{1};
 	float									_aspectRatio{};
@@ -74,6 +78,12 @@ public:
 	[[nodiscard]] const std::vector<std::shared_ptr<Ambient> >& getAmbientV() const;
 	[[nodiscard]] const std::vector<std::shared_ptr<Camera> >& getCameraV() const;
 	[[nodiscard]] const std::vector<std::shared_ptr<AFigure> >& getFigureV() const;
+
+//	get params
+public:
+	[[nodiscard]] float getDistToViewPort() const;
+	[[nodiscard]] static float getWinWidth();
+	[[nodiscard]] static float getWinHeight();
 };
 
 #endif //RT_SCENE_HPP

@@ -72,7 +72,7 @@ PATH_OBJS = $(addprefix $(DIR_OBJS)/, $(OBJS))
 DIR_SRCS_OBJS = $(addprefix $(DIR_OBJS)/, $(DIRS))
 
 #Добавление библиотеки mlx
-OPENGL_FLAGS = -framework GLUT -framework OpenGL
+OPENGL_FLAGS = -framework GLUT -framework OpenGL -framework OpenCL
 
 # компилятор
 CC = clang++
@@ -91,7 +91,7 @@ RESET = \033[0m
 all: $(NAME)
 
 # получение исполняемого файла
-$(NAME): write_logo create_dirs $(PATH_OBJS)
+$(NAME): write_logo create_dirs cl_download $(PATH_OBJS)
 	@echo "$(GREEN)\nObjects was created $(RESET)"
 	@$(CC) $(FLAGS) $(OPENGL_FLAGS) -I $(DIR_HEADERS) $(MLX) $(PATH_OBJS) -o $@
 	@echo "$(GREEN)Simply the best hard multi-d ray-tracing mother lover by peace dukes was compiled $(RESET)"
@@ -140,6 +140,10 @@ write_logo:
 create_dirs:
 	@mkdir -p $(DIR_OBJS) $(DIR_SRCS_OBJS)
 
+
+cl_download:
+	@chmod +x ClDownload.sh
+	@bash ClDownload.sh
 
 #Получение объектных файлов
 #Для удобства объектные файлы были помещены в отдеьную директорию

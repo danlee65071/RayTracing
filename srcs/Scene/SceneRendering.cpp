@@ -13,48 +13,63 @@ void g_displayCallBack()
 }
 
 extern "C"
-void g_keyDown(unsigned char key, int x, int y)
+void g_moveCamera(unsigned char key, int x, int y)
 {
-	float step = 0.8;
+	Vector3f OVector;
+	int sign = 1;
 
 	(void)x;
 	(void)y;
-	if (key == 'w')
+	if (key == 'w' || key == 's')
 	{
-		auto OVector = g_currentInstance->getCameraV()[0]->getDirection().multNum(step) + g_currentInstance->getCameraV()[0]->getCoordinates();
-		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
-		g_currentInstance->_display();
+		if (key == 's')
+			sign = -1;
+		OVector = g_currentInstance->getCameraV()[0]->getDirection().multNum(STEP_CAMERA * sign) + g_currentInstance->getCameraV()[0]->getCoordinates();
 	}
-	else if (key == 's')
-	{
-		auto OVector = g_currentInstance->getCameraV()[0]->getDirection().multNum(-step) + g_currentInstance->getCameraV()[0]->getCoordinates();
-		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
-		g_currentInstance->_display();
-	}
-	else if (key == 'a')
+	else if (key == 'a' || key == 'd')
 	{
 		Vector3f OY(0, 1, 0);
 		Quaternion q(cosf(45 * M_PI / 180), OY.multNum(sinf(45 * M_PI / 180)));
-		auto OVector = g_currentInstance->getCameraV()[0]->getDirection();
+		OVector = g_currentInstance->getCameraV()[0]->getDirection();
 		OVector = q.rotateVector(OVector);
-		OVector = OVector.multNum(step) + g_currentInstance->getCameraV()[0]->getCoordinates();
-		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
-		g_currentInstance->_display();
+		if (key == 'd')
+			sign = -1;
+		OVector = OVector.multNum(STEP_CAMERA * sign) + g_currentInstance->getCameraV()[0]->getCoordinates();
 	}
-	else if (key == 'd')
-	{
-		Vector3f OY(0, 1, 0);
-		Quaternion q(cosf(45 * M_PI / 180), OY.multNum(sinf(45 * M_PI / 180)));
-		auto OVector = g_currentInstance->getCameraV()[0]->getDirection();
-		OVector = q.rotateVector(OVector);
-		OVector = OVector.multNum(-step) + g_currentInstance->getCameraV()[0]->getCoordinates();
-		g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
-		g_currentInstance->_display();
-	}
+	else
+		return;
+	g_currentInstance->getCameraV()[0]->setCoordinates(OVector.getX(), OVector.getY(), OVector.getZ());
+	g_currentInstance->_display();
 }
 
 extern "C"
-void changeView(int x, int y)
+void g_keyUp(int key, int x, int y)
+{
+	Vector3f rotationVector;
+	int sign = 1;
+	(void)x;
+	(void)y;
+	if (key == GLUT_KEY_UP || key == GLUT_KEY_DOWN)
+	{
+		Vector3f OX(1, 0, 0);
+		if (key == GLUT_KEY_DOWN)
+			sign = -1;
+		Quaternion q(cosf(ANGLE_ROTATION_CAMERA * sign / 2), OX.multNum(sinf(ANGLE_ROTATION_CAMERA * sign / 2)));
+		rotationVector = q.rotateVector(g_currentInstance->getCameraV()[0]->getDirection());
+	}
+	else if (key == GLUT_KEY_RIGHT || key == GLUT_KEY_LEFT)
+	{
+		Vector3f OY(0, 1, 0);
+		if (key == GLUT_KEY_RIGHT)
+			sign = -1;
+		Quaternion q(cosf(ANGLE_ROTATION_CAMERA * sign / 2), OY.multNum(sinf(ANGLE_ROTATION_CAMERA * sign / 2)));
+		rotationVector = q.rotateVector(g_currentInstance->getCameraV()[0]->getDirection());
+	}
+	else
+		return;
+	g_currentInstance->getCameraV()[0]->setDirection(rotationVector.getX(), rotationVector.getY(), rotationVector.getZ());
+	g_currentInstance->_display();
+}
 
 void Scene::rendering(int argc, char** argv)
 {
@@ -92,7 +107,6 @@ void Scene::_makeImage()
 		{
 			Vector3f D((x * this->_viewPortWidth) / 2, (y * this->_viewPortHeight) / 2, this->_distToViewPort);
 			D = q.rotateVector(D);
-//			std::shared_ptr<Camera> camera = std::make_shared<Camera>(*(this->_vCamera[0]));
 			auto color = this->_traceRay(this->_vCamera[0]->getCoordinates(), D);
 
 			int r = color.getRed();
@@ -105,9 +119,9 @@ void Scene::_makeImage()
 			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][0]= r;
 			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][1]= g;
 			_checkImage[static_cast<int>(y * _winHeight / 2 + _winHeight / 2.)][static_cast<int>(x * _winWidth / 2 + _winWidth / 2.)][2]= b;
-			y += 2. / Scene::_winHeight;
+			y += 1. / Scene::_winHeight;
 		}
-		x += 2. / Scene::_winWidth;
+		x += 1. / Scene::_winWidth;
 	}
 }
 
@@ -124,15 +138,13 @@ void Scene::_setUpDisplayCallBack()
 {
 	::g_currentInstance = this;
 	::glutDisplayFunc(::g_displayCallBack);
-	::glutKeyboardFunc(::g_keyDown);
-	::glutMotionFunc();
+	::glutKeyboardFunc(::g_moveCamera);
+	::glutSpecialFunc(g_keyUp);
 }
 
 Color Scene::_traceRay(const Vector3f& O, const Vector3f &D, int depth, float min, float max)
 {
-
 	float closest_t = INF;
-
 	std::shared_ptr<AFigure> closest_shape = this->_closestIntersection(O, D, closest_t, min, max);
 
 	if (closest_shape == nullptr)
@@ -212,3 +224,17 @@ std::shared_ptr<AFigure> Scene::_closestIntersection(const Vector3f &O, const Ve
 	return closest_shape;
 }
 
+float Scene::getDistToViewPort() const
+{
+	return this->_distToViewPort;
+}
+
+float Scene::getWinWidth()
+{
+	return Scene::_winWidth;
+}
+
+float Scene::getWinHeight()
+{
+	return Scene::_winHeight;
+}
