@@ -1,8 +1,16 @@
-#include "Scene.hpp"
+#define GENERATE_OPENCL_CODE
+#define INCLUDED_IN_IMPLEMENTATION_FILE
 
-__kernel void Test(__global char* data)
+class TestClass
 {
-    for (int i = 0; i < 4; i++)
-        data[i] = 'A';
-    data[4] = '\0';
+private:
+	int x = 1;
+public:
+	void setX(int other) { x = other; }
+	int getX() const { return x; }
+};
+
+void kernel simple_add(global const TestClass* A, global const TestClass* B, global TestClass* C)
+{
+    C->setX(A->getX() + B->getX());
 }

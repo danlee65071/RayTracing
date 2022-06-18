@@ -19,11 +19,9 @@
 #include "Quaternion.hpp"
 #include <limits>
 #include <fstream>
-#define GL_SILENCE_DEPRECATION
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <GLUT/glut.h>
-#include </Users/hcharlsi/goinfre/OpenCL-Registry/api/2.1/cl.hpp>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glad/gl.h>
 
 #define EPSILON 0.001
 #define INF std::numeric_limits<float>::infinity()
@@ -39,8 +37,8 @@ private:
 	std::vector<std::shared_ptr<AFigure> >	_vFigure;
 
 private:
-	static const int						_winWidth{300};
-	static const int						_winHeight{300};
+	static const int						_winWidth{250};
+	static const int						_winHeight{400};
 	GLubyte									_checkImage[_winHeight][_winWidth][3]{};
 	float									_distToViewPort{1};
 	float									_aspectRatio{};
