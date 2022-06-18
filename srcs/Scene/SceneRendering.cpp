@@ -45,42 +45,79 @@ void g_moveCamera(unsigned char key, int x, int y)
 extern "C"
 void g_keyUp(int key, int x, int y)
 {
-	Vector3f rotationVector;
-	int sign = 1;
-	(void)x;
-	(void)y;
-	if (key == GLUT_KEY_UP || key == GLUT_KEY_DOWN)
-	{
-		Vector3f OX(1, 0, 0);
-		if (key == GLUT_KEY_DOWN)
-			sign = -1;
-		Quaternion q(cosf(ANGLE_ROTATION_CAMERA * sign / 2), OX.multNum(sinf(ANGLE_ROTATION_CAMERA * sign / 2)));
-		rotationVector = q.rotateVector(g_currentInstance->getCameraV()[0]->getDirection());
-	}
-	else if (key == GLUT_KEY_RIGHT || key == GLUT_KEY_LEFT)
-	{
-		Vector3f OY(0, 1, 0);
-		if (key == GLUT_KEY_RIGHT)
-			sign = -1;
-		Quaternion q(cosf(ANGLE_ROTATION_CAMERA * sign / 2), OY.multNum(sinf(ANGLE_ROTATION_CAMERA * sign / 2)));
-		rotationVector = q.rotateVector(g_currentInstance->getCameraV()[0]->getDirection());
-	}
-	else
-		return;
-	g_currentInstance->getCameraV()[0]->setDirection(rotationVector.getX(), rotationVector.getY(), rotationVector.getZ());
-	g_currentInstance->_display();
+//	Vector3f rotationVector;
+//	int sign = 1;
+//	(void)x;
+//	(void)y;
+//	if (key == GLUT_KEY_UP || key == GLUT_KEY_DOWN)
+//	{
+//		Vector3f OX(1, 0, 0);
+//		if (key == GLUT_KEY_DOWN)
+//			sign = -1;
+//		Quaternion q(cosf(ANGLE_ROTATION_CAMERA * sign / 2), OX.multNum(sinf(ANGLE_ROTATION_CAMERA * sign / 2)));
+//		rotationVector = q.rotateVector(g_currentInstance->getCameraV()[0]->getDirection());
+//	}
+//	else if (key == GLUT_KEY_RIGHT || key == GLUT_KEY_LEFT)
+//	{
+//		Vector3f OY(0, 1, 0);
+//		if (key == GLUT_KEY_RIGHT)
+//			sign = -1;
+//		Quaternion q(cosf(ANGLE_ROTATION_CAMERA * sign / 2), OY.multNum(sinf(ANGLE_ROTATION_CAMERA * sign / 2)));
+//		rotationVector = q.rotateVector(g_currentInstance->getCameraV()[0]->getDirection());
+//	}
+//	else
+//		return;
+//	g_currentInstance->getCameraV()[0]->setDirection(rotationVector.getX(), rotationVector.getY(), rotationVector.getZ());
+//	g_currentInstance->_display();
 }
 
 void Scene::rendering(int argc, char** argv)
 {
-	glutInit(&argc,argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	glutInitWindowSize(Scene::_winWidth, Scene::_winHeight);
-	glutInitWindowPosition(0,0);
-	glutCreateWindow("RT");
-	this->_init();
-	this->_setUpDisplayCallBack();
-	glutMainLoop();
+//	glutInit(&argc,argv);
+//	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+//	glutInitWindowSize(Scene::_winWidth, Scene::_winHeight);
+//	glutInitWindowPosition(0,0);
+//	glutCreateWindow("RT");
+//	this->_init();
+//	this->_setUpDisplayCallBack();
+//	glutMainLoop();
+
+    glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, GL_FALSE);
+//    glfwInitHint(GLFW_COCOA_MENUBAR, GL_TRUE);
+    glfwInitHint(GLFW_COCOA_MENUBAR, GL_FALSE);
+    if (!glfwInit())
+        PrintErrorAndExit("GLFW init error!");
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+    glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GL_TRUE);
+    glfwWindowHint(GLFW_COCOA_GRAPHICS_SWITCHING, GL_TRUE);
+    GLFWwindow* window = glfwCreateWindow(Scene::_winWidth, Scene::_winHeight, "RT", monitor, NULL);
+    if (!window)
+        PrintErrorAndExit("Window init error!");
+//    glfwMakeContextCurrent(window);
+//    if (!gladLoadGL())
+//        PrintErrorAndExit("GLAD load Gl failed!");
+//
+    auto time = static_cast<float>(glfwGetTime());
+    float lastFramesPrint = time;
+    float framesCount = 0;
+    while (!glfwWindowShouldClose(window))
+    {
+        framesCount++;
+        auto newTime = static_cast<float>(glfwGetTime());
+        float deltaTime = newTime - time;
+        time = newTime;
+        if (newTime - lastFramesPrint > 1.0f)
+        {
+            std::cout << "FPS: " << framesCount << std::endl;
+            lastFramesPrint = newTime;
+            framesCount = 0;
+        }
+    }
 }
 
 void Scene::_init()
@@ -127,20 +164,20 @@ void Scene::_makeImage()
 
 void Scene::_display()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glRasterPos2f(-1, -1);
-	this->_makeImage();
-	glDrawPixels(Scene::_winWidth, Scene::_winHeight, GL_RGB, GL_UNSIGNED_BYTE, this->_checkImage);
-	glFlush();
-	glutSwapBuffers();
+//	glClear(GL_COLOR_BUFFER_BIT);
+//	glRasterPos2f(-1, -1);
+//	this->_makeImage();
+//	glDrawPixels(Scene::_winWidth, Scene::_winHeight, GL_RGB, GL_UNSIGNED_BYTE, this->_checkImage);
+//	glFlush();
+//	glutSwapBuffers();
 }
 
 void Scene::_setUpDisplayCallBack()
 {
-	::g_currentInstance = this;
-	::glutDisplayFunc(::g_displayCallBack);
-	::glutKeyboardFunc(::g_moveCamera);
-	::glutSpecialFunc(g_keyUp);
+//	::g_currentInstance = this;
+//	::glutDisplayFunc(::g_displayCallBack);
+//	::glutKeyboardFunc(::g_moveCamera);
+//	::glutSpecialFunc(g_keyUp);
 }
 
 Color Scene::_traceRay(const Vector3f& O, const Vector3f &D, int depth, float min, float max)

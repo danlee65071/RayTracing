@@ -18,7 +18,8 @@ SRCS 		= 		main.cpp \
 					Sphere.cpp \
 					Cylinder.cpp \
 					Plane.cpp \
-					Quaternion.cpp
+					Quaternion.cpp \
+					utils.cpp
 
 # Parser
 SRCS_PARSER =		Parser.cpp \
@@ -71,8 +72,16 @@ OBJS = $(patsubst %.cpp, %.o, $(SRCS))
 PATH_OBJS = $(addprefix $(DIR_OBJS)/, $(OBJS))
 DIR_SRCS_OBJS = $(addprefix $(DIR_OBJS)/, $(DIRS))
 
-#Добавление библиотеки mlx
-OPENGL_FLAGS = -framework GLUT -framework OpenGL -framework Cocoa -framework IOKit
+#Добавление библиотек
+OPENGL_FLAGS = -framework OpenGL -framework Cocoa -framework IOKit
+
+#Добавление gflw
+GLFW_LIB = glfw/lib/libglfw3.a
+GLFW_HEADERS_DIR = glfw/include
+
+#GLAD
+GLAD_LIB = glad/glad.a
+GLAD_HEADERS_DIR = glad/include
 
 # компилятор
 CC = clang++
@@ -93,7 +102,7 @@ all: $(NAME)
 # получение исполняемого файла
 $(NAME): write_logo create_dirs $(PATH_OBJS)
 	@echo "$(GREEN)\nObjects was created $(RESET)"
-	@$(CC) $(FLAGS) $(OPENGL_FLAGS) -I $(DIR_HEADERS) $(MLX) $(PATH_OBJS) -o $@
+	@$(CC) $(FLAGS) $(OPENGL_FLAGS) -I $(DIR_HEADERS) -I $(GLFW_HEADERS_DIR) -I $(GLAD_HEADERS_DIR) $(GLFW_LIB) $(GLAD_LIB) $(PATH_OBJS) -o $@
 	@echo "$(GREEN)Simply the best hard multi-d ray-tracing mother lover by peace dukes was compiled $(RESET)"
 
 
@@ -140,17 +149,12 @@ write_logo:
 create_dirs:
 	@mkdir -p $(DIR_OBJS) $(DIR_SRCS_OBJS)
 
-
-glfw_download:
-	@chmod +x Download.sh
-	@bash ClDownload.sh
-
 #Получение объектных файлов
 #Для удобства объектные файлы были помещены в отдеьную директорию
 #Объектные файлы зависят от си файлов
 #Ещё есть зависимость от хэдеров. Это нужно, чтобы при измении хэдера проект перекомпилировался
 $(DIR_OBJS)/%.o: $(DIR_SRCS)/%.cpp $(PATH_HEADERS) Makefile
-	@$(CC) $(FLAGS) -I $(DIR_HEADERS) -c $< -o $@
+	@$(CC) $(FLAGS) -I $(DIR_HEADERS) -I $(GLFW_HEADERS_DIR) -I $(GLAD_HEADERS_DIR) -c $< -o $@
 	@echo "$(GREEN).$(RESET)\c"
 
 #Абстрактная цель clean

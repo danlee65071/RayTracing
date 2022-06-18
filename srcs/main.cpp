@@ -22,9 +22,8 @@ void testParser(Parser& p)
 
 int main(int argc, char** argv)
 {
-	// Parser p("scenes/hi.rt");
-	// testParser(p);
-	// Scene s = p.getScene();
-	// s.rendering(argc, argv);
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	 Parser p("scenes/hi.rt");
+//	 testParser(p);
+	 Scene s = p.getScene();
+	 s.rendering(argc, argv);
 }

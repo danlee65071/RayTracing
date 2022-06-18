@@ -70,4 +70,6 @@ typedef struct s_data
 	int		endian;
 }	t_data;
 
+void PrintErrorAndExit(const std::string& msg);
+
 #endif //RT_UTILS_HPP

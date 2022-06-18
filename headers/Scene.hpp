@@ -21,7 +21,7 @@
 #include <fstream>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <glad/gl.h>
+#include <glad/glad.h>
 
 #define EPSILON 0.001
 #define INF std::numeric_limits<float>::infinity()
@@ -37,9 +37,9 @@ private:
 	std::vector<std::shared_ptr<AFigure> >	_vFigure;
 
 private:
-	static const int						_winWidth{250};
-	static const int						_winHeight{400};
-	GLubyte									_checkImage[_winHeight][_winWidth][3]{};
+	static const int						_winWidth{720};
+	static const int						_winHeight{480};
+	int								        _checkImage[_winHeight][_winWidth][3]{};
 	float									_distToViewPort{1};
 	float									_aspectRatio{};
 	float									_viewPortWidth{1};
